@@ -218,9 +218,9 @@ public class GThumb extends RelativeLayout {
                 }
             };
             if (bgShape.equals(SHAPE_SQUARE)) {
-                Picasso.with(context).load(imageURL).into(imageViewRealImage,callback);
+//                Picasso.with(context).load(imageURL).into(imageViewRealImage,callback);
             } else {
-                Picasso.with(context).load(imageURL).transform(new CircleTransform()).into(imageViewRealImage,callback);
+//                Picasso.with(context).load(imageURL).transform(new CircleTransform()).into(imageViewRealImage,callback);
             }
         } else { //if URL is not valid
             relativeForeground.setVisibility(GONE);
