@@ -48,7 +48,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     api 'com.squareup.picasso:picasso:2.5.2'
-
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }
 
 

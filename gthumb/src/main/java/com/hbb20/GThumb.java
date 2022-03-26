@@ -19,6 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hbb20.gthumbnaillibrary.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -45,6 +51,7 @@ public class GThumb extends RelativeLayout {
     boolean flagMonoColor;
     boolean hideUntilImageLoaded;
     private int bgColorEntropy;
+    private DisplayImageOptions options;
 
     public GThumb(Context context) {
         super(context);
@@ -65,6 +72,14 @@ public class GThumb extends RelativeLayout {
     }
 
     private void init(AttributeSet attrs) {
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .displayer(new CircleBitmapDisplayer(Color.WHITE, 0))
+                .build();
+
         log("Initialization");
         rootView = LayoutInflater.from(context).inflate(R.layout.layout_gt_user_thumb, this, true);
         relativeForeground = (RelativeLayout) rootView.findViewById(R.id.relative_gt_foreground);
@@ -204,24 +219,48 @@ public class GThumb extends RelativeLayout {
                 relativeBackgroundHolder.setVisibility(VISIBLE);
                 relativeForeground.setVisibility(VISIBLE);
             }
-            Callback callback=new Callback() {
-                @Override
-                public void onSuccess() {
-                    relativeForeground.setVisibility(VISIBLE);
-                    relativeBackgroundHolder.setVisibility(VISIBLE);
-                }
+//            Callback callback=new Callback() {
+//                @Override
+//                public void onSuccess() {
+//                    relativeForeground.setVisibility(VISIBLE);
+//                    relativeBackgroundHolder.setVisibility(VISIBLE);
+//                }
+//
+//                @Override
+//                public void onError() {
+//                    relativeForeground.setVisibility(INVISIBLE);
+//                    relativeBackgroundHolder.setVisibility(VISIBLE);
+//                }
+//            };
+//            if (bgShape.equals(SHAPE_SQUARE)) {
+//                Picasso.with(context).load(imageURL).into(imageViewRealImage,callback);
+//            } else {
+//                Picasso.with(context).load(imageURL).transform(new CircleTransform()).into(imageViewRealImage,callback);
+//            }
 
+            ImageLoader imageLoader = ImageLoader.getInstance();
+            imageLoader.displayImage(imageURL, imageViewRealImage, options, new ImageLoadingListener() {
                 @Override
-                public void onError() {
+                public void onLoadingStarted(String imageUri, View view) {
+
+                }
+                @Override
+                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                     relativeForeground.setVisibility(INVISIBLE);
                     relativeBackgroundHolder.setVisibility(VISIBLE);
                 }
-            };
-            if (bgShape.equals(SHAPE_SQUARE)) {
-                Picasso.with(context).load(imageURL).into(imageViewRealImage,callback);
-            } else {
-                Picasso.with(context).load(imageURL).transform(new CircleTransform()).into(imageViewRealImage,callback);
-            }
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    relativeForeground.setVisibility(VISIBLE);
+                    relativeBackgroundHolder.setVisibility(VISIBLE);
+                }
+                @Override
+                public void onLoadingCancelled(String imageUri, View view) {
+
+                }
+            });
+
+
         } else { //if URL is not valid
             relativeForeground.setVisibility(GONE);
             relativeBackgroundHolder.setVisibility(VISIBLE);
