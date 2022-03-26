@@ -21,14 +21,10 @@ import android.widget.TextView;
 import com.hbb20.gthumbnaillibrary.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 /**
  * Created by hbb20 on 18/4/16.
@@ -72,6 +68,9 @@ public class GThumb extends RelativeLayout {
     }
 
     private void init(AttributeSet attrs) {
+
+        if(!ImageLoader.getInstance().isInited())
+            ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(context));
 
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
